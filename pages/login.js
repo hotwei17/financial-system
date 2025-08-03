@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { motion } from 'framer-motion'
-import { Lock, User } from 'lucide-react'
 import Head from 'next/head'
 
 export default function Login() {
@@ -55,14 +53,10 @@ export default function Login() {
         <title>管理員登入 - 財務資訊系統</title>
       </Head>
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md"
-      >
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-primary-600" />
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 text-blue-600">🔒</div>
           </div>
           <h1 className="text-2xl font-bold text-gray-800 mb-2">管理員登入</h1>
           <p className="text-gray-600">請輸入您的帳號密碼</p>
@@ -71,13 +65,13 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <User className="w-4 h-4 inline mr-1" />
+              <span className="inline mr-1">👤</span>
               帳號
             </label>
             <input
               type="text"
               required
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="請輸入帳號"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
@@ -86,13 +80,13 @@ export default function Login() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Lock className="w-4 h-4 inline mr-1" />
+              <span className="inline mr-1">🔒</span>
               密碼
             </label>
             <input
               type="password"
               required
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="請輸入密碼"
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
@@ -108,7 +102,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full btn-primary py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? '登入中...' : '登入'}
           </button>
@@ -117,12 +111,12 @@ export default function Login() {
         <div className="mt-6 text-center">
           <a
             href="/"
-            className="text-primary-600 hover:text-primary-700 text-sm"
+            className="text-blue-600 hover:text-blue-700 text-sm"
           >
             ← 返回表單頁面
           </a>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }
