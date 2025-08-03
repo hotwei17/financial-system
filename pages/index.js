@@ -1,106 +1,30 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { User, Home, Building, DollarSign, CreditCard, CheckCircle } from 'lucide-react'
+￼import { useState } from 'react'
 import Head from 'next/head'
 
-export default function Home() {
+export default function HomePage() {
   const [formData, setFormData] = useState({
-    personalInfo: {
-      name: '',
-      annualIncome: '',
-      birthDate: '',
-      spouseName: '',
-      spouseAnnualIncome: '',
-      spouseBirthDate: ''
-    },
-    properties: [{
-      address: '',
-      estimatedMarketPrice: '',
-      loanBalance: '',
-      monthlyPayment: ''
-    }],
-    presales: [{
-      projectName: '',
-      contractPrice: '',
-      expectedDelivery: '',
-      remainingPayment: ''
-    }],
-    assets: {
-      cash: '',
-      stocks: '',
-      dividendInvestments: '',
-      dividendMonthlyIncome: '',
-      insuranceValue: ''
-    },
-    debts: {
-      personalLoan: '',
-      personalLoanMonthly: '',
-      carLoan: '',
-      carLoanMonthly: '',
-      stockPledge: '',
-      stockPledgeMonthly: '',
-      insuranceLoan: '',
-      insuranceLoanMonthly: ''
-    }
+    name: '',
+    annualIncome: '',
+    birthDate: '',
+    propertyAddress: '',
+    propertyValue: '',
+    loanBalance: '',
+    monthlyPayment: '',
+    purchasePrice: '',
+    downPayment: '',
+    loanAmount: '',
+    purpose: ''
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
-  const handleInputChange = (section, field, value, index = null) => {
-    setFormData(prev => {
-      const newData = { ...prev }
-      
-      if (index !== null) {
-        newData[section][index][field] = value
-      } else if (typeof newData[section] === 'object' && !Array.isArray(newData[section])) {
-        newData[section][field] = value
-      }
-      
-      return newData
-    })
-  }
-
-  const addProperty = () => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      properties: [...prev.properties, {
-        address: '',
-        estimatedMarketPrice: '',
-        loanBalance: '',
-        monthlyPayment: ''
-      }]
+      [name]: value
     }))
-  }
-
-  const removeProperty = (index) => {
-    if (formData.properties.length > 1) {
-      setFormData(prev => ({
-        ...prev,
-        properties: prev.properties.filter((_, i) => i !== index)
-      }))
-    }
-  }
-
-  const addPresale = () => {
-    setFormData(prev => ({
-      ...prev,
-      presales: [...prev.presales, {
-        projectName: '',
-        contractPrice: '',
-        expectedDelivery: '',
-        remainingPayment: ''
-      }]
-    }))
-  }
-
-  const removePresale = (index) => {
-    if (formData.presales.length > 1) {
-      setFormData(prev => ({
-        ...prev,
-        presales: prev.presales.filter((_, i) => i !== index)
-      }))
-    }
   }
 
   const handleSubmit = async (e) => {
@@ -113,523 +37,261 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       })
 
       if (response.ok) {
-        setShowSuccess(true)
+        setSubmitted(true)
       } else {
         alert('提交失敗，請稍後再試')
       }
     } catch (error) {
-      console.error('Submit error:', error)
+      console.error('提交錯誤:', error)
       alert('提交失敗，請稍後再試')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  if (showSuccess) {
+  if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
         <Head>
-          <title>提交成功 - 財務資訊表格</title>
+          <title>提交成功 - 財務資訊收集系統</title>
         </Head>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center"
-        >
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">提交成功！</h1>
-          <p className="text-gray-600 mb-6">
-            感謝您填寫財務資訊表格。我們已收到您的資料，將盡快為您提供專業的財務建議。
+        <div style={{ background: 'white', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', padding: '40px', maxWidth: '400px', width: '100%', textAlign: 'center' }}>
+          <div style={{ color: '#4caf50', fontSize: '60px', marginBottom: '20px' }}>✓</div>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#333', marginBottom: '20px' }}>提交成功！</h1>
+          <p style={{ color: '#666', marginBottom: '30px' }}>
+            感謝您提供的資訊，我們會盡快與您聯繫。
           </p>
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="font-semibold text-gray-800 mb-2">聯絡方式</h3>
-            <div className="text-sm text-gray-600 space-y-1">
-              <p>📧 Email: hotwei17@life.fubon.com</p>
-              <p>📱 電話: 0917229463</p>
-              <p>💬 LINE: @hotwie17</p>
-            </div>
-          </div>
-          <p className="text-sm text-gray-500">
-            如有任何問題，歡迎隨時與我們聯繫。
-          </p>
-        </motion.div>
+          <button
+            onClick={() => {
+              setSubmitted(false)
+              setFormData({
+                name: '',
+                annualIncome: '',
+                birthDate: '',
+                propertyAddress: '',
+                propertyValue: '',
+                loanBalance: '',
+                monthlyPayment: '',
+                purchasePrice: '',
+                downPayment: '',
+                loanAmount: '',
+                purpose: ''
+              })
+            }}
+            style={{ background: '#2196f3', color: 'white', padding: '12px 24px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '16px' }}
+          >
+            填寫新表單
+          </button>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)', padding: '20px' }}>
       <Head>
-        <title>財務資訊填寫表格</title>
-        <meta name="description" content="請填寫您的財務資訊，我們將為您提供專業的理財建議" />
+        <title>財務資訊收集系統</title>
+        <meta name="description" content="財務資訊收集表單" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      
-      <div className="container mx-auto px-4 max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">財務資訊填寫表格</h1>
-          <p className="text-gray-600">請詳細填寫以下資訊，提供的資訊越完整，越能快速地找出解答或提供初步的建議。</p>
-        </motion.div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* 個人資訊 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="card"
-          >
-            <div className="flex items-center mb-4">
-              <User className="w-5 h-5 text-primary-600 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">個人資訊</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
-                <input
-                  type="text"
-                  required
-                  className="input-field"
-                  placeholder="請輸入姓名"
-                  value={formData.personalInfo.name}
-                  onChange={(e) => handleInputChange('personalInfo', 'name', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">年收入(扣繳憑單)（萬） *</label>
-                <input
-                  type="number"
-                  required
-                  className="input-field"
-                  placeholder="請輸入年收入"
-                  value={formData.personalInfo.annualIncome}
-                  onChange={(e) => handleInputChange('personalInfo', 'annualIncome', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">出生年/月/日 *</label>
-                <input
-                  type="date"
-                  required
-                  className="input-field"
-                  value={formData.personalInfo.birthDate}
-                  onChange={(e) => handleInputChange('personalInfo', 'birthDate', e.target.value)}
-                />
-              </div>
-            </div>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ background: 'white', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', overflow: 'hidden' }}>
+          <div style={{ background: 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)', padding: '30px', textAlign: 'center' }}>
+            <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: 'white', margin: '0 0 10px 0' }}>
+              財務資訊收集系統
+            </h1>
+            <p style={{ color: '#e3f2fd', margin: 0 }}>
+              請填寫以下資訊，我們將為您提供最適合的財務建議
+            </p>
+          </div>
 
-            <div className="border-t pt-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-4">配偶資訊 (選填)</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <form onSubmit={handleSubmit} style={{ padding: '30px' }}>
+            {/* 個人資訊 */}
+            <div style={{ background: '#f5f5f5', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#333', marginBottom: '20px' }}>個人資訊</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">配偶姓名</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    姓名 *
+                  </label>
                   <input
                     type="text"
-                    className="input-field"
-                    placeholder="請輸入配偶姓名"
-                    value={formData.personalInfo.spouseName}
-                    onChange={(e) => handleInputChange('personalInfo', 'spouseName', e.target.value)}
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">配偶年收入（萬）</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    年收入(扣繳憑單) *
+                  </label>
                   <input
                     type="number"
-                    className="input-field"
-                    placeholder="請輸入配偶年收入"
-                    value={formData.personalInfo.spouseAnnualIncome}
-                    onChange={(e) => handleInputChange('personalInfo', 'spouseAnnualIncome', e.target.value)}
+                    name="annualIncome"
+                    value={formData.annualIncome}
+                    onChange={handleInputChange}
+                    required
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">配偶出生年/月/日</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    出生年月日 *
+                  </label>
                   <input
                     type="date"
-                    className="input-field"
-                    value={formData.personalInfo.spouseBirthDate}
-                    onChange={(e) => handleInputChange('personalInfo', 'spouseBirthDate', e.target.value)}
+                    name="birthDate"
+                    value={formData.birthDate}
+                    onChange={handleInputChange}
+                    required
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
             </div>
-          </motion.div>
 
-          {/* 成屋資訊 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="card"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <Home className="w-5 h-5 text-primary-600 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-800">目前手上成屋</h2>
+            {/* 目前手上成屋 */}
+            <div style={{ background: '#f5f5f5', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#333', marginBottom: '20px' }}>目前手上成屋</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    地址
+                  </label>
+                  <input
+                    type="text"
+                    name="propertyAddress"
+                    value={formData.propertyAddress}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    銀行估價
+                  </label>
+                  <input
+                    type="number"
+                    name="propertyValue"
+                    value={formData.propertyValue}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    貸款餘額
+                  </label>
+                  <input
+                    type="number"
+                    name="loanBalance"
+                    value={formData.loanBalance}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    每月月付金
+                  </label>
+                  <input
+                    type="number"
+                    name="monthlyPayment"
+                    value={formData.monthlyPayment}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  />
+                </div>
               </div>
+            </div>
+
+            {/* 預計購買房屋 */}
+            <div style={{ background: '#f5f5f5', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#333', marginBottom: '20px' }}>預計購買房屋</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    購買價格
+                  </label>
+                  <input
+                    type="number"
+                    name="purchasePrice"
+                    value={formData.purchasePrice}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    自備款
+                  </label>
+                  <input
+                    type="number"
+                    name="downPayment"
+                    value={formData.downPayment}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    貸款金額
+                  </label>
+                  <input
+                    type="number"
+                    name="loanAmount"
+                    value={formData.loanAmount}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#555', marginBottom: '5px' }}>
+                    用途
+                  </label>
+                  <select
+                    name="purpose"
+                    value={formData.purpose}
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', boxSizing: 'border-box' }}
+                  >
+                    <option value="">請選擇</option>
+                    <option value="自住">自住</option>
+                    <option value="投資">投資</option>
+                    <option value="其他">其他</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
               <button
-                type="button"
-                onClick={addProperty}
-                className="btn-secondary text-sm"
+                type="submit"
+                disabled={isSubmitting}
+                style={{ 
+                  background: isSubmitting ? '#ccc' : '#2196f3', 
+                  color: 'white', 
+                  padding: '15px 40px', 
+                  borderRadius: '6px', 
+                  border: 'none', 
+                  fontSize: '18px', 
+                  fontWeight: '600', 
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  transition: 'background-color 0.3s'
+                }}
               >
-                新增成屋
+                {isSubmitting ? '提交中...' : '提交表單'}
               </button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">如果不只一間請點擊新增成屋</p>
-
-            {formData.properties.map((property, index) => (
-              <div key={index} className="border rounded-lg p-4 mb-4 bg-gray-50">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-medium text-gray-700">成屋 #{index + 1}</h3>
-                  {formData.properties.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeProperty(index)}
-                      className="text-red-500 hover:text-red-700 text-sm"
-                    >
-                      刪除
-                    </button>
-                  )}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">地址</label>
-                    <input
-                      type="text"
-                      className="input-field"
-                      placeholder="請輸入房屋地址"
-                      value={property.address}
-                      onChange={(e) => handleInputChange('properties', 'address', e.target.value, index)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">預估市價（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入預估市價"
-                      value={property.estimatedMarketPrice}
-                      onChange={(e) => handleInputChange('properties', 'estimatedMarketPrice', e.target.value, index)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">貸款餘額（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入貸款餘額"
-                      value={property.loanBalance}
-                      onChange={(e) => handleInputChange('properties', 'loanBalance', e.target.value, index)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">每月月付金（元）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入每月月付金"
-                      value={property.monthlyPayment}
-                      onChange={(e) => handleInputChange('properties', 'monthlyPayment', e.target.value, index)}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* 預售屋資訊 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="card"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <Building className="w-5 h-5 text-primary-600 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-800">預售</h2>
-              </div>
-              <button
-                type="button"
-                onClick={addPresale}
-                className="btn-secondary text-sm"
-              >
-                新增預售
-              </button>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">如果不只一間請點擊新增預售</p>
-
-            {formData.presales.map((presale, index) => (
-              <div key={index} className="border rounded-lg p-4 mb-4 bg-gray-50">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-medium text-gray-700">預售 #{index + 1}</h3>
-                  {formData.presales.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removePresale(index)}
-                      className="text-red-500 hover:text-red-700 text-sm"
-                    >
-                      刪除
-                    </button>
-                  )}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">建案名稱</label>
-                    <input
-                      type="text"
-                      className="input-field"
-                      placeholder="請輸入建案名稱"
-                      value={presale.projectName}
-                      onChange={(e) => handleInputChange('presales', 'projectName', e.target.value, index)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">合約價格（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入合約價格"
-                      value={presale.contractPrice}
-                      onChange={(e) => handleInputChange('presales', 'contractPrice', e.target.value, index)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">預計交屋時間</label>
-                    <input
-                      type="month"
-                      className="input-field"
-                      value={presale.expectedDelivery}
-                      onChange={(e) => handleInputChange('presales', 'expectedDelivery', e.target.value, index)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">待付工程款（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入待付工程款"
-                      value={presale.remainingPayment}
-                      onChange={(e) => handleInputChange('presales', 'remainingPayment', e.target.value, index)}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* 動產 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="card"
-          >
-            <div className="flex items-center mb-4">
-              <DollarSign className="w-5 h-5 text-primary-600 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">動產</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">現金（萬）</label>
-                <input
-                  type="number"
-                  className="input-field"
-                  placeholder="請輸入現金金額"
-                  value={formData.assets.cash}
-                  onChange={(e) => handleInputChange('assets', 'cash', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">股票（萬）</label>
-                <input
-                  type="number"
-                  className="input-field"
-                  placeholder="請輸入股票價值"
-                  value={formData.assets.stocks}
-                  onChange={(e) => handleInputChange('assets', 'stocks', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">有配息投資（萬）</label>
-                <input
-                  type="number"
-                  className="input-field"
-                  placeholder="請輸入有配息投資金額"
-                  value={formData.assets.dividendInvestments}
-                  onChange={(e) => handleInputChange('assets', 'dividendInvestments', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">有配息投資月收入（元）</label>
-                <input
-                  type="number"
-                  className="input-field"
-                  placeholder="請輸入月配息收入"
-                  value={formData.assets.dividendMonthlyIncome}
-                  onChange={(e) => handleInputChange('assets', 'dividendMonthlyIncome', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">保單價值金（萬）</label>
-                <input
-                  type="number"
-                  className="input-field"
-                  placeholder="請輸入保單價值金"
-                  value={formData.assets.insuranceValue}
-                  onChange={(e) => handleInputChange('assets', 'insuranceValue', e.target.value)}
-                />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* 其他負債 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="card"
-          >
-            <div className="flex items-center mb-4">
-              <CreditCard className="w-5 h-5 text-primary-600 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">其他負債</h2>
-            </div>
-            
-            <div className="space-y-6">
-              {/* 信貸 */}
-              <div className="border-b pb-4">
-                <h3 className="font-medium text-gray-700 mb-3">信貸</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">信貸餘額（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入信貸餘額"
-                      value={formData.debts.personalLoan}
-                      onChange={(e) => handleInputChange('debts', 'personalLoan', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">信貸月付金（元）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入信貸月付金"
-                      value={formData.debts.personalLoanMonthly}
-                      onChange={(e) => handleInputChange('debts', 'personalLoanMonthly', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* 車貸 */}
-              <div className="border-b pb-4">
-                <h3 className="font-medium text-gray-700 mb-3">車貸</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">車貸餘額（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入車貸餘額"
-                      value={formData.debts.carLoan}
-                      onChange={(e) => handleInputChange('debts', 'carLoan', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">車貸月付金（元）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入車貸月付金"
-                      value={formData.debts.carLoanMonthly}
-                      onChange={(e) => handleInputChange('debts', 'carLoanMonthly', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* 股債質押 */}
-              <div className="border-b pb-4">
-                <h3 className="font-medium text-gray-700 mb-3">股債質押</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">股債質押（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入股債質押金額"
-                      value={formData.debts.stockPledge}
-                      onChange={(e) => handleInputChange('debts', 'stockPledge', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">股債質押月付金（元）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入股債質押月付金"
-                      value={formData.debts.stockPledgeMonthly}
-                      onChange={(e) => handleInputChange('debts', 'stockPledgeMonthly', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* 保單貸款 */}
-              <div>
-                <h3 className="font-medium text-gray-700 mb-3">保單貸款</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">保單貸款（萬）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入保單貸款金額"
-                      value={formData.debts.insuranceLoan}
-                      onChange={(e) => handleInputChange('debts', 'insuranceLoan', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">保單貸款月付金（元）</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder="請輸入保單貸款月付金"
-                      value={formData.debts.insuranceLoanMonthly}
-                      onChange={(e) => handleInputChange('debts', 'insuranceLoanMonthly', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* 提交按鈕 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="text-center"
-          >
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-primary text-lg px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? '提交中...' : '提交表格'}
-            </button>
-          </motion.div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   )
