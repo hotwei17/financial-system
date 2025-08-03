@@ -15,11 +15,6 @@
     "@planetscale/database": "^1.11.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2"
-  },
-  "devDependencies": {
-    "autoprefixer": "10.4.16",
-    "postcss": "8.4.31",
-    "tailwindcss": "3.3.5"
   }
 }
 
